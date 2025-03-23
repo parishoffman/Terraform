@@ -47,6 +47,7 @@ resource "aws_instance" "ec2_private" {
   key_name                    = var.key_name
   subnet_id                   = var.vpc.private_subnets[1]
   vpc_security_group_ids      = [var.sg_priv_id]
+  count = 6
 
   tags = {
     "Name" = "${var.namespace}-EC2-PRIVATE"
