@@ -17,3 +17,7 @@ variable "sg_pub_id" {
 variable "sg_priv_id" {
   type = any
 }
+
+variable "ami_id" {
+  type = string
+}

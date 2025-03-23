@@ -15,4 +15,5 @@ module "ec2" {
   sg_pub_id = module.vpc.sg_pub_id
   sg_priv_id = module.vpc.sg_priv_id
   key_name = module.ssh-key.key_name
+  ami_id = var.ami_id
 }
