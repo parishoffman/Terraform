@@ -11,12 +11,11 @@ packer init .
 
 packer build .
 
-cp variables.auto.tfvars.example variables.auto.tfvars
 # Edit your file to add the AMI_ID
-# Replace <put AMI_ID here> with the actual AMI_ID 
-
-# Set up AWS credentials by copying over your keys into your config file
+# Replace <put AMI_ID here> with the actual AMI_ID
+cp variables.auto.tfvars.example variables.auto.tfvars
 ```
+Set up AWS credentials by copying over your keys into your config file
 
 3. Run Terraform
 ```bash
@@ -38,12 +37,13 @@ ssh -i <put key_name here>.pem ec2-user@<put public_ip here>
 ```
 
 5. Connect to Private EC2
+
 Once you are in the public EC2, create a pem file
 ```bash
 # For example:
 vim private.pem
 
-# Copy over the contents from your previous .pem file, into your new .pem file
+# Copy over the contents from your previous .pem file into your new .pem file
 ```
 Next, you want to change the mode for your new .pem file
 ```bash
