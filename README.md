@@ -12,19 +12,25 @@ This project automates the provisioning of a secure AWS infrastructure using Ter
 ### 1. Clone repo
 ```bash
 git clone git@github.com:parishoffman/Terraform.git
+
+cd Terraform
 ```
 
-### 2. Run Packer and Copy AMI_ID
+### 2. Copy AMI_ID and Run Packer 
 ```bash
+# Create config file from template
+cp variables.auto.tfvars.example variables.auto.tfvars
+
+# Edit the config file to add ami_id
+vim variables.auto.tfvars
+
+# Set up your AWS credentials
+aws configure
+
 packer init .
 
 packer build .
-
-# Edit your file to add the AMI_ID
-# Replace <put AMI_ID here> with the actual AMI_ID
-cp variables.auto.tfvars.example variables.auto.tfvars
 ```
-Set up AWS credentials by copying over your keys into your config file
 
 ### 3. Run Terraform
 ```bash
