@@ -59,6 +59,7 @@ Once you are in the public EC2, create a pem file
 vim private.pem
 
 # Copy over the contents from your previous .pem file into your new .pem file
+# Make sure there are no white spaces in your new .pem file
 ```
 Next, you want to change the mode for your new .pem file
 ```bash
