@@ -8,7 +8,7 @@ resource "aws_instance" "ec2_public" {
   vpc_security_group_ids      = [var.sg_pub_id]
 
   tags = {
-    "Name" = "${var.namespace}-EC2-PUBLIC"
+    "Name" = "${var.namespace}-PUBLIC"
   }
 
   # Copies the ssh key file to home dir
@@ -50,7 +50,7 @@ resource "aws_instance" "ec2_private" {
   count = 6
 
   tags = {
-    "Name" = "${var.namespace}-EC2-PRIVATE"
+    "Name" = "${var.namespace}-PRIVATE"
   }
 
 }
