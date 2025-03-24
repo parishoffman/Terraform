@@ -43,6 +43,7 @@ terraform apply
 When prompted with `Do you want to perform these actions?`, type `yes`. It will continue.
 
 Once complete, it will output the `key_name`, the `private_ip`, and the `public_ip`.
+
 <img width="526" alt="Screenshot 2025-03-24 at 1 56 23 PM" src="https://github.com/user-attachments/assets/7b9018ec-6037-46f3-a0b2-59304e835293" />
 
 
@@ -75,6 +76,7 @@ Now, you are ready to ssh into the private EC2
 ssh -i <put new .pem file here> ec2-user@<put private_ip here>
 ```
 When prompted `Are you sure you want to continue connecting (yes/no)?`, enter `yes`.
+
 <img width="664" alt="Screenshot 2025-03-24 at 2 00 45 PM" src="https://github.com/user-attachments/assets/43653214-89e2-4590-88d6-341a27086051" />
 
 
