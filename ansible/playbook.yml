@@ -1,0 +1,96 @@
+- name: EC2 Instance Management
+  hosts: aws_ubuntu:aws_amazon
+  become: true
+  gather_facts: true
+  
+  tasks:
+    - name: Update apt cache (Ubuntu)
+      apt:
+        update_cache: yes
+      when: ansible_os_family == "Debian"
+    
+    - name: Upgrade packages (Ubuntu)
+      apt:
+        upgrade: dist
+      when: ansible_os_family == "Debian"
+    
+    - name: Update dnf cache (Amazon Linux)
+      dnf:
+        update_cache: yes
+      when: ansible_os_family == "RedHat"
+    
+    - name: Upgrade packages (Amazon Linux)
+      dnf:
+        name: '*'
+        state: latest
+      when: ansible_os_family == "RedHat"
+    
+    - name: Install prerequisites for Docker (Ubuntu)
+      apt:
+        name:
+          - apt-transport-https
+          - ca-certificates
+          - curl
+          - gnupg
+          - lsb-release
+        state: present
+      when: ansible_os_family == "Debian"
+    
+    - name: Add Docker GPG key (Ubuntu)
+      apt_key:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        state: present
+      when: ansible_os_family == "Debian"
+    
+    - name: Add Docker repository (Ubuntu)
+      apt_repository:
+        repo: "deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable"
+        state: present
+      when: ansible_os_family == "Debian"
+    
+    - name: Install Docker (Ubuntu)
+      apt:
+        name:
+          - docker-ce
+          - docker-ce-cli
+          - containerd.io
+        state: latest
+        update_cache: yes
+      when: ansible_os_family == "Debian"
+    
+    - name: Install Docker (Amazon Linux)
+      dnf:
+        name: docker
+        state: latest
+      when: ansible_os_family == "RedHat"
+    
+    - name: Start and enable Docker service
+      service:
+        name: docker
+        state: started
+        enabled: yes
+    
+    - name: Get Docker version
+      command: docker --version
+      register: docker_version
+      changed_when: false
+    
+    - name: Print Docker version
+      debug:
+        msg: "Docker version: {{ docker_version.stdout }}"
+    
+    - name: Get disk usage information
+      command: df -h
+      register: disk_usage
+      changed_when: false
+    
+    - name: Print disk usage
+      debug:
+        msg: "Disk usage for {{ inventory_hostname }}:\n{{ disk_usage.stdout }}"
+    
+    - name: Create disk usage report
+      local_action:
+        module: copy
+        content: "Disk usage for {{ inventory_hostname }}:\n{{ disk_usage.stdout }}\n\n"
+        dest: "./disk_usage_reports/{{ inventory_hostname }}.txt"
+      become: false
