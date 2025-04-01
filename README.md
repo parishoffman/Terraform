@@ -94,7 +94,11 @@ git checkout Multi-OS
 # Go to the ansible directory
 cd ansible
 
+# Move the private key here
+mv ~/private.pem .
 
+# Run ansible
+ansible-playbook -i aws_ec2.yml playbook.yml --private-key ~/private.pem
 
 # 
 ```
