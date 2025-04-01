@@ -2,64 +2,52 @@
   hosts: aws_ubuntu:aws_amazon
   become: true
   gather_facts: true
+  vars:
+    ansible_python_interpreter: "/usr/bin/python3.11"
+    ansible_user: ubuntu
   
   tasks:
     - name: Update apt cache (Ubuntu)
-      apt:
-        update_cache: yes
+      shell: apt update
       when: ansible_os_family == "Debian"
     
-    - name: Upgrade packages (Ubuntu)
-      apt:
-        upgrade: dist
-      when: ansible_os_family == "Debian"
+  #  - name: Upgrade packages (Ubuntu)
+  #    shell: apt upgrade    
+  #    when: ansible_os_family == "Debian"
     
-    - name: Update dnf cache (Amazon Linux)
-      dnf:
+    - name: Update yum cache (Amazon Linux)
+      yum:
         update_cache: yes
       when: ansible_os_family == "RedHat"
     
     - name: Upgrade packages (Amazon Linux)
-      dnf:
+      yum:
         name: '*'
         state: latest
       when: ansible_os_family == "RedHat"
-    
-    - name: Install prerequisites for Docker (Ubuntu)
-      apt:
-        name:
-          - apt-transport-https
-          - ca-certificates
-          - curl
-          - gnupg
-          - lsb-release
-        state: present
+
+    - name: Install curl
+      shell: apt install -y apt-transport-https ca-certificates curl software-properties-common
       when: ansible_os_family == "Debian"
-    
+
     - name: Add Docker GPG key (Ubuntu)
-      apt_key:
-        url: https://download.docker.com/linux/ubuntu/gpg
-        state: present
+      shell: curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor --yes -o /usr/share/keyrings/docker-archive-keyring.gpg
       when: ansible_os_family == "Debian"
-    
+
     - name: Add Docker repository (Ubuntu)
-      apt_repository:
-        repo: "deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable"
-        state: present
+      shell: echo "deb [arch=arm64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null
       when: ansible_os_family == "Debian"
     
+    - name: Update
+      shell: apt update -y
+      when: ansible_os_family == "Debian"
+
     - name: Install Docker (Ubuntu)
-      apt:
-        name:
-          - docker-ce
-          - docker-ce-cli
-          - containerd.io
-        state: latest
-        update_cache: yes
-      when: ansible_os_family == "Debian"
-    
+      shell: apt install -y docker-ce
+      when: ansible_os_family == "Debian"   
+   
     - name: Install Docker (Amazon Linux)
-      dnf:
+      yum:
         name: docker
         state: latest
       when: ansible_os_family == "RedHat"

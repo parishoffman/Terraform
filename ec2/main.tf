@@ -1,12 +1,12 @@
 // Configure the EC2 instance in a public subnet
 resource "aws_instance" "ec2_public" {
-  ami                         = var.ami_id
+  count = 4
+  ami                         = "ami-0e3faa5e960844571"
   associate_public_ip_address = true
-  instance_type               = "t2.micro"
+  instance_type               = "t4g.micro"
   key_name                    = var.key_name
   subnet_id                   = var.vpc.public_subnets[0]
   vpc_security_group_ids      = [var.sg_pub_id]
-  count = 6
 
   tags = {
     "Name" = "${var.namespace}-PUBLIC"
@@ -37,7 +37,46 @@ resource "aws_instance" "ec2_public" {
     }
 
   }
+}
 
+resource "aws_instance" "ec2_ubuntu" {
+  count = 3
+  ami                         = var.ami_id
+  associate_public_ip_address = true
+  instance_type               = "t4g.micro"
+  key_name                    = var.key_name
+  subnet_id                   = var.vpc.public_subnets[0]
+  vpc_security_group_ids      = [var.sg_pub_id]
+
+  tags = {
+    "Name" = "${var.namespace}-UBUNTU-PUBLIC"
+  }
+
+  # Copies the ssh key file to home dir
+  provisioner "file" {
+    source      = "./${var.key_name}.pem"
+    destination = "/home/ubuntu/${var.key_name}.pem"
+
+    connection {
+      type        = "ssh"
+      user        = "ubuntu"
+      private_key = file("${var.key_name}.pem")
+      host        = self.public_ip
+    }
+  }
+  
+  //chmod key 400 on EC2 instance
+  provisioner "remote-exec" {
+    inline = ["chmod 400 ~/${var.key_name}.pem"]
+
+    connection {
+      type        = "ssh"
+      user        = "ubuntu"
+      private_key = file("${var.key_name}.pem")
+      host        = self.public_ip
+    }
+
+  }
 }
 
 # // Configure the EC2 instance in a private subnet
