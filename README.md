@@ -57,30 +57,27 @@ ssh -i <put key_name here>.pem ec2-user@<put public_ip here>
 
 ### 5. Connect to Private EC2
 
-Once you are in the public EC2, create a pem file
+Once you are in the public EC2, create a pem file and download ansible
 ```bash
 # For example:
 vim private.pem
 
+chmod 400 private.pem
+
 # Copy over the contents from your previous .pem file into your new .pem file
 # Make sure there are no white spaces in your new .pem file
-```
-Next, you want to change the mode for your new .pem file
-```bash
-chmod 400 private.pem
-```
 
-Now, you are ready to ssh into the private EC2
-```bash
-# Copy your new .pem file name, and private_ip from the output before
-ssh -i <put new .pem file here> ec2-user@<put private_ip here>
-```
-When prompted `Are you sure you want to continue connecting (yes/no)?`, enter `yes`.
+sudo amazon-linux-extras install python3.8 -y
+python3.8 -m venv .venv
+source .venv/bin/activate
 
-<img width="664" alt="Screenshot 2025-03-24 at 2 00 45 PM" src="https://github.com/user-attachments/assets/43653214-89e2-4590-88d6-341a27086051" />
+# Install ansible and other dependencies
+pip install ansible==2.9.23
+pip install boto3 botocore
+ansible-galaxy collection install amazon.aws
 
+# Set your AWS credentials
+aws configure
 
-```bash
-# Check docker version
-docker -v
+# and finally run ansible
 ```
