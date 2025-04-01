@@ -68,8 +68,8 @@ chmod 400 private.pem
 # Make sure there are no white spaces in your new .pem file
 
 sudo amazon-linux-extras install python3.8 -y
-python3.8 -m venv .venv
-source .venv/bin/activate
+python3.8 -m venv .ansible
+source .ansible/bin/activate
 
 # Install ansible and other dependencies
 pip install ansible==2.9.23
@@ -79,5 +79,22 @@ ansible-galaxy collection install amazon.aws
 # Set your AWS credentials
 aws configure
 
-# and finally run ansible
+# install git
+sudo yum install git -y
+
+# clone the repo
+git clone https://github.com/parishoffman/Terraform.git
+
+# Go to the Terraform directory
+cd Terraform
+
+# Checkout the correct branch
+git checkout Multi-OS
+
+# Go to the ansible directory
+cd ansible
+
+
+
+# 
 ```
