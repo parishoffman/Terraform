@@ -18,6 +18,10 @@ cd Terraform
 
 ### 2. Copy AMI_ID and Run Packer 
 ```bash
+packer init .
+
+packer build .
+
 # Create config file from template
 cp variables.auto.tfvars.example variables.auto.tfvars
 
@@ -26,10 +30,6 @@ vim variables.auto.tfvars
 
 # Set up your AWS credentials
 aws configure
-
-packer init .
-
-packer build .
 ```
 
 ### 3. Run Terraform
