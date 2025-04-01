@@ -9,7 +9,8 @@ resource "aws_instance" "ec2_public" {
   vpc_security_group_ids      = [var.sg_pub_id]
 
   tags = {
-    "Name" = "${var.namespace}-PUBLIC"
+    "Name" = "${var.namespace}-PUBLIC",
+    "OS" = "amazon",
   }
 
   # Copies the ssh key file to home dir
@@ -49,7 +50,8 @@ resource "aws_instance" "ec2_ubuntu" {
   vpc_security_group_ids      = [var.sg_pub_id]
 
   tags = {
-    "Name" = "${var.namespace}-UBUNTU-PUBLIC"
+    "Name" = "${var.namespace}-UBUNTU-PUBLIC",
+    "OS" = "ubuntu"
   }
 
   # Copies the ssh key file to home dir
